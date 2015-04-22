@@ -1,0 +1,22 @@
+{
+    "name": "angular-piwik",
+    "version": "0.1.0",
+    "description": "AngularJS service for Piwik reporting API",
+    "keywords": ["angular", "piwik"],
+    "homepage": "https://github.com/proximedia/angular-piwik",
+    "main": "src/angular-piwik.js",
+    "repository" : {
+        "type" : "git",
+        "url" : "https://github.com/proximedia/angular-piwik.git"
+    },
+    "bugs" : {
+        "url" : "https://github.com/proximedia/angular-piwik/issues"
+    },
+    "dependencies": {
+    },
+    "devDependencies": {
+        "angular": "~1.0",
+        "grunt": "~0.4.0"
+    },
+    "license": "MIT"
+}
