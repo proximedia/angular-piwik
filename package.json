@@ -15,8 +15,9 @@
     "dependencies": {
     },
     "devDependencies": {
-        "angular": "~1.0",
-        "grunt": "~0.4.0"
+        "grunt": "~0.4.0",
+        "grunt-contrib-uglify": "*",
+        "grunt-contrib-watch": "*"
     },
     "license": "MIT"
 }
