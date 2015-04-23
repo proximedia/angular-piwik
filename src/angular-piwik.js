@@ -1,26 +1,28 @@
 'use strict';
-angular.module("pxmPiwik", [], ["$provide", function ($provide)
+angular.module("pxmPiwik", []).config(["$provide", "$httpProvider", function ($provide, $httpProvider)
     {
+        $httpProvider.defaults.paramSerializer = "$httpParamSerializerJQLike";
         $provide.constant("piwikFormat", "json");
         $provide.constant("piwikLanguage", "en");
         $provide.constant("piwikToken", "anonymous");
         $provide.constant("piwikUrl", "http://demo.piwik.org/");
-        $provide.factory("$piwik", ["$http", "piwikFormat", "piwikLanguage", "piwikToken", "piwikUrl", function ($http, piwikFormat, piwikLanguage, piwikToken, piwikUrl)
+        $provide.factory("$piwik", ["$http", "$httpParamSerializerJQLike", "piwikFormat", "piwikLanguage", "piwikToken", "piwikUrl", function ($http, $httpParamSerializerJQLike, piwikFormat, piwikLanguage, piwikToken, piwikUrl)
             {
                 var piwik = {}, util = {};
 
                 piwik.format = piwikFormat;
                 piwik.language = piwikLanguage;
                 piwik.token = piwikToken;
-                piwik.url = piwikUrl;
+                piwik.urlApi = piwikUrl;
+                piwik.urlWidget = piwikUrl;
 
                 piwik.call = function ()
                 {
                     var args;
 
-                    if (arguments.length === 1 && arguments[0][0].constructor === Array) {
+                    if (arguments.length === 1 && angular.isArray(arguments[0][0])) {
                         args = arguments[0];
-                    } else if (arguments.length === 2 && arguments[0].constructor === String) {
+                    } else if (arguments.length === 2 && angular.isString(arguments[0])) {
                         args = [[arguments[0], arguments[1]]];
                     } else {
                         args = Array.prototype.slice.call(arguments);
@@ -41,28 +43,32 @@ angular.module("pxmPiwik", [], ["$provide", function ($provide)
 
                     angular.forEach(args, function (arg)
                     {
-                        this.push(util.buildQuery(util.methodParams(arg)));
+                        this.push($httpParamSerializerJQLike(util.methodParams(arg)));
                     }, params.urls);
 
                     return util.apiCall(params);
                 };
+                piwik.widget = function (method, params)
+                {
+                    return  piwik.urlWidget
+                            + (piwik.urlWidget.indexOf('?') === -1 ? '?' : '&')
+                            + $httpParamSerializerJQLike(angular.extend({
+                        action: "iframe",
+                        actionToWidgetize: method.split(".")[1],
+                        disableLink: 1,
+                        language: piwik.language,
+                        module: "Widgetize",
+                        moduleToWidgetize: method.split(".")[0],
+                        token_auth: piwik.token,
+                        widget: 1
+                    }, params));
+                };
                 util.apiCall = function (params)
                 {
-                    return $http.get(piwik.url, {params: angular.extend({
+                    return $http.get(piwik.urlApi, {params: angular.extend({
                             format: piwik.format,
                             module: "API"
-                        }, util.tidyParams(params))});
-                };
-                util.buildQuery = function (params)
-                {
-                    var string_params = [];
-
-                    angular.forEach(util.tidyParams(params), function (value, key)
-                    {
-                        this.push(key + "=" + value);
-                    }, string_params);
-
-                    return string_params.join("&");
+                        }, params)});
                 };
                 util.methodParams = function (arg)
                 {
@@ -71,24 +77,6 @@ angular.module("pxmPiwik", [], ["$provide", function ($provide)
                         method: arg[0],
                         token_auth: piwik.token
                     }, arg[1]);
-                };
-                util.tidyParams = function (params)
-                {
-                    angular.forEach(params, function (value, key)
-                    {
-                        if (value.constructor !== Array) {
-                            this[key] = value;
-                            return;
-                        }
-
-                        delete this[key];
-
-                        for (var index in value) {
-                            this[key + "[" + index + "]"] = value[index];
-                        }
-                    }, params);
-
-                    return params;
                 };
 
                 return piwik;
