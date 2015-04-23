@@ -67,13 +67,13 @@ angular.module("pxmPiwik", []).config(["$provide", "$httpProvider", function ($p
                 {
                     return $http.get(piwik.urlApi, {params: angular.extend({
                             format: piwik.format,
+                            language: piwik.language,
                             module: "API"
                         }, params)});
                 };
                 util.methodParams = function (arg)
                 {
                     return angular.extend({
-                        language: piwik.language,
                         method: arg[0],
                         token_auth: piwik.token
                     }, arg[1]);
