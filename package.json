@@ -1,6 +1,6 @@
 {
     "name": "proximedia-angular-piwik",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "description": "AngularJS service for Piwik reporting API and widget retrieval",
     "keywords": ["angular", "piwik"],
     "homepage": "https://github.com/proximedia/angular-piwik",

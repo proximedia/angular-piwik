@@ -1,12 +1,11 @@
 'use strict';
-angular.module("pxmPiwik", []).config(["$provide", "$httpProvider", function ($provide, $httpProvider)
+angular.module("pxmPiwik", []).config(["$provide", function ($provide)
     {
-        $httpProvider.defaults.paramSerializer = "$httpParamSerializerJQLike";
         $provide.constant("piwikFormat", "json");
         $provide.constant("piwikLanguage", "en");
         $provide.constant("piwikToken", "anonymous");
         $provide.constant("piwikUrl", "http://demo.piwik.org/");
-        $provide.factory("$piwik", ["$http", "$httpParamSerializerJQLike", "piwikFormat", "piwikLanguage", "piwikToken", "piwikUrl", function ($http, $httpParamSerializerJQLike, piwikFormat, piwikLanguage, piwikToken, piwikUrl)
+        $provide.factory("$piwik", ["$http", "piwikFormat", "piwikLanguage", "piwikToken", "piwikUrl", function ($http, piwikFormat, piwikLanguage, piwikToken, piwikUrl)
             {
                 var piwik = {}, util = {};
 
@@ -43,16 +42,14 @@ angular.module("pxmPiwik", []).config(["$provide", "$httpProvider", function ($p
 
                     angular.forEach(args, function (arg)
                     {
-                        this.push($httpParamSerializerJQLike(util.methodParams(arg)));
+                        this.push(util.paramSerializer(util.methodParams(arg)));
                     }, params.urls);
 
                     return util.apiCall(params);
                 };
                 piwik.widget = function (method, params)
                 {
-                    return  piwik.urlWidget
-                            + (piwik.urlWidget.indexOf('?') === -1 ? '?' : '&')
-                            + $httpParamSerializerJQLike(angular.extend({
+                    return util.buildUrl(piwik.urlWidget, angular.extend({
                         action: "iframe",
                         actionToWidgetize: method.split(".")[1],
                         disableLink: 1,
@@ -65,11 +62,17 @@ angular.module("pxmPiwik", []).config(["$provide", "$httpProvider", function ($p
                 };
                 util.apiCall = function (params)
                 {
-                    return $http.get(piwik.urlApi, {params: angular.extend({
-                            format: piwik.format,
-                            language: piwik.language,
-                            module: "API"
-                        }, params)});
+                    return $http.get(util.buildUrl(piwik.urlApi, angular.extend({
+                        format: piwik.format,
+                        language: piwik.language,
+                        module: "API"
+                    }, params)));
+                };
+                util.buildUrl = function (url, params)
+                {
+                    return url
+                            + (url.indexOf("?") === -1 ? "?" : "&")
+                            + util.paramSerializer(params);
                 };
                 util.methodParams = function (arg)
                 {
@@ -78,6 +81,39 @@ angular.module("pxmPiwik", []).config(["$provide", "$httpProvider", function ($p
                         token_auth: piwik.token
                     }, arg[1]);
                 };
+                util.paramSerializer = function (params) {
+                    if (!params) {
+                        return "";
+                    }
+
+                    var parts = [];
+
+                    angular.forEach(params, function (value, key)
+                    {
+                        if (value === null || angular.isUndefined(value)) {
+                            return;
+                        }
+
+                        if (!angular.isArray(value) && !angular.isObject(value)) {
+                            parts.push(encodeURIComponent(key) + "=" + encodeURIComponent(util.serializeValue(value)));
+                            return;
+                        }
+
+                        angular.forEach(value, function (v, k)
+                        {
+                            parts.push(encodeURIComponent(key + "[" + k + "]") + "=" + encodeURIComponent(util.serializeValue(v)));
+                        });
+                    });
+
+                    return parts.length > 0 ? parts.join("&") : "";
+                };
+                util.serializeValue = function (v)
+                {
+                    if (angular.isObject(v)) {
+                        return angular.isDate(v) ? v.toISOString() : angular.toJson(v);
+                    }
+                    return v;
+                }
 
                 return piwik;
             }
