@@ -32,6 +32,15 @@ Enough words, let's...
 <script src="https://rawgit.com/proximedia/angular-piwik/master/src/angular-piwik.js" type="application/javascript"></script>
 ```
 
+#### Using NPM
+
+Just run `npm i proximedia-angular-piwik` from your console in your project folder.
+
+And add this snippet to your HTML file:
+```html
+<script src="node_modules/proximedia-angular-piwik/src/angular-piwik.js" type="application/javascript"></script>
+```
+
 ### Add the dependency to your module
 
 Add `"pxmPiwik"` to the list of dependencies of your module. It should look a bit like this:
