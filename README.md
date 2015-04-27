@@ -32,6 +32,15 @@ Enough words, let's...
 <script src="https://rawgit.com/proximedia/angular-piwik/master/src/angular-piwik.js" type="application/javascript"></script>
 ```
 
+#### Using Bower
+
+Just run `bower install proximedia-angular-piwik` from your console in your project folder.
+
+And add this snippet to your HTML file:
+```html
+<script src="bower_components/proximedia-angular-piwik/src/angular-piwik.js" type="application/javascript"></script>
+```
+
 #### Using NPM
 
 Just run `npm i proximedia-angular-piwik` from your console in your project folder.

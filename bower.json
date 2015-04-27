@@ -1,0 +1,22 @@
+{
+    "name": "proximedia-angular-piwik",
+    "version": "0.2.3",
+    "description": "AngularJS service for Piwik open source web analytics platform API.",
+    "keywords": ["angular", "piwik"],
+    "homepage": "https://github.com/proximedia/angular-piwik",
+    "main": "src/angular-piwik.js",
+    "authors": [
+        "Alexandre Lahure <alexandre.lahure@proximedia.fr>"
+    ],
+    "moduleType": [
+        "globals"
+    ],
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests"
+    ],
+    "license": "MIT"
+}
