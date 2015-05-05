@@ -1,6 +1,6 @@
 {
     "name": "proximedia-angular-piwik",
-    "version": "0.2.3",
+    "version": "0.3.0",
     "description": "AngularJS service for Piwik open source web analytics platform API.",
     "keywords": ["angular", "piwik"],
     "homepage": "https://github.com/proximedia/angular-piwik",
