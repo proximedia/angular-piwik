@@ -19,17 +19,17 @@ Enough words, let's...
 
 * for production, add this snippet to your HTML file:
 ```html
-<script src="https://cdn.rawgit.com/proximedia/angular-piwik/v0.2.2/build/angular-piwik.min.js" type="application/javascript"></script>
+<script src="https://cdn.rawgit.com/proximedia/angular-piwik/v0.3.0/build/angular-piwik.min.js" type="application/javascript"></script>
 ```
 * for development, prefer this one:
 ```html
-<script src="https://rawgit.com/proximedia/angular-piwik/v0.2.2/src/angular-piwik.js" type="application/javascript"></script>
+<script src="https://cdn.rawgit.com/proximedia/angular-piwik/v0.3.0/build/angular-piwik.js" type="application/javascript"></script>
 ```
 
 ##### On the edge
 
 ```html
-<script src="https://rawgit.com/proximedia/angular-piwik/master/src/angular-piwik.js" type="application/javascript"></script>
+<script src="https://rawgit.com/proximedia/angular-piwik/master/build/angular-piwik.js" type="application/javascript"></script>
 ```
 
 #### Using Bower
@@ -38,7 +38,7 @@ Just run `bower install proximedia-angular-piwik` from your console in your proj
 
 And add this snippet to your HTML file:
 ```html
-<script src="bower_components/proximedia-angular-piwik/src/angular-piwik.js" type="application/javascript"></script>
+<script src="bower_components/proximedia-angular-piwik/build/angular-piwik.js" type="application/javascript"></script>
 ```
 
 #### Using NPM
@@ -47,7 +47,7 @@ Just run `npm i proximedia-angular-piwik` from your console in your project fold
 
 And add this snippet to your HTML file:
 ```html
-<script src="node_modules/proximedia-angular-piwik/src/angular-piwik.js" type="application/javascript"></script>
+<script src="node_modules/proximedia-angular-piwik/build/angular-piwik.js" type="application/javascript"></script>
 ```
 
 ### Add the dependency to your module
@@ -60,17 +60,23 @@ var app = angular.module("myApp", ["pxmPiwik"]);
 
 ## Setting things up
 
-We provide for your pleasure 4 configuration constants with gently defaults:
+We provide $piwikProvider for your pleasure with 7 methods with gently defaults:
 
-* `piwikFormat` defaults to `json` ;
-* `piwikLanguage` defaults to `en`: as some Piwik response elements are localized, we thought this could be useful ;
-* `piwikToken` defaults to `anonymous` ;
-* `piwikUrl` defaults to `http://demo.piwik.org/`: we're sure you're gonna change this one.
+* `setFormat`. Default is `json` ;
+* `setLanguage`. Default is `en`: as some Piwik response elements are localized, we thought this could be useful ;
+* `setToken`. Default is `anonymous` ;
+* `setUrl`. Use this one if you use only one Piwik instance. Default is `http://demo.piwik.org/`: we're pretty sure you're gonna use this one ;
+* `setUrlApi`. Default is `http://demo.piwik.org/` ;
+* `setUrlTracker`. Default is `http://demo.piwik.org/` ;
+* `setUrlWidget`. Default is `http://demo.piwik.org/`.
 
 You can change them as easily as writing this:
 
 ```javascript
-app.constant("piwikLanguage", "fr");
+app.config(["$piwikProvider", function ($piwikProvider)
+{
+  $piwikProvider.setLanguage("fr");
+}]);
 ```
 
 And you can always override these defaults at call time.
@@ -95,7 +101,10 @@ Here we are, at least. Let us introduce you the `$piwik` service. For the moment
 ```javascript
 var app = angular.module("myApp", ["pxmPiwik"]);
 
-app.constant("piwikLanguage", "fr");
+app.config(["$piwikProvider", function ($piwikProvider)
+{
+  $piwikProvider.setLanguage("fr");
+}]);
 
 app.controller("MyCtrl", ["$piwik", function ($piwik)
 {

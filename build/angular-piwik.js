@@ -1,19 +1,59 @@
 'use strict';
-angular.module("pxmPiwik", []).config(["$provide", function ($provide)
+angular.module("pxmPiwik", []);
+
+angular.module("pxmPiwik")
+.config(["$provide", function ($provide)
     {
-        $provide.constant("piwikFormat", "json");
-        $provide.constant("piwikLanguage", "en");
-        $provide.constant("piwikToken", "anonymous");
-        $provide.constant("piwikUrl", "http://demo.piwik.org/");
-        $provide.factory("$piwik", ["$http", "piwikFormat", "piwikLanguage", "piwikToken", "piwikUrl", function ($http, piwikFormat, piwikLanguage, piwikToken, piwikUrl)
+        function PiwikProvider()
+        {
+            var
+                piwikFormat = "json",
+                piwikLanguage = "en",
+                piwikToken = "anonymous",
+                piwikUrlApi = "http://demo.piwik.org/",
+                piwikUrlTracker = "http://demo.piwik.org/",
+                piwikUrlWidget = "http://demo.piwik.org/";
+
+            this.setFormat = function (value)
+            {
+                piwikFormat = value;
+            };
+
+            this.setLanguage = function (value)
+            {
+                piwikLanguage = value;
+            };
+
+            this.setToken = function (value)
+            {
+                piwikToken = value;
+            };
+
+            this.setUrl = function (value)
+            {
+                piwikUrlApi = value;
+                piwikUrlTracker = value;
+                piwikUrlWidget = value;
+            };
+
+            this.setUrlApi = function (value)
+            {
+                piwikUrlApi = value;
+            };
+
+            this.setUrlTracker = function (value)
+            {
+                piwikUrlTracker = value;
+            };
+
+            this.setUrlWidget = function (value)
+            {
+                piwikUrlWidget = value;
+            };
+            
+            this.$get = ["$http", function PiwikFactory($http)
             {
                 var piwik = {}, util = {};
-
-                piwik.format = piwikFormat;
-                piwik.language = piwikLanguage;
-                piwik.token = piwikToken;
-                piwik.urlApi = piwikUrl;
-                piwik.urlWidget = piwikUrl;
 
                 piwik.call = function ()
                 {
@@ -49,22 +89,22 @@ angular.module("pxmPiwik", []).config(["$provide", function ($provide)
                 };
                 piwik.widget = function (method, params)
                 {
-                    return util.buildUrl(piwik.urlWidget, angular.extend({
+                    return util.buildUrl(piwikUrlWidget, angular.extend({
                         action: "iframe",
                         actionToWidgetize: method.split(".")[1],
                         disableLink: 1,
-                        language: piwik.language,
+                        language: piwikLanguage,
                         module: "Widgetize",
                         moduleToWidgetize: method.split(".")[0],
-                        token_auth: piwik.token,
+                        token_auth: piwikToken,
                         widget: 1
                     }, params));
                 };
                 util.apiCall = function (params)
                 {
-                    return $http.get(util.buildUrl(piwik.urlApi, angular.extend({
-                        format: piwik.format,
-                        language: piwik.language,
+                    return $http.get(util.buildUrl(piwikUrlApi, angular.extend({
+                        format: piwikFormat,
+                        language: piwikLanguage,
                         module: "API"
                     }, params)));
                 };
@@ -78,7 +118,7 @@ angular.module("pxmPiwik", []).config(["$provide", function ($provide)
                 {
                     return angular.extend({
                         method: arg[0],
-                        token_auth: piwik.token
+                        token_auth: piwikToken
                     }, arg[1]);
                 };
                 util.paramSerializer = function (params) {
@@ -116,7 +156,9 @@ angular.module("pxmPiwik", []).config(["$provide", function ($provide)
                 }
 
                 return piwik;
-            }
-        ]);
+            }];
+        }
+
+        $provide.provider("$piwik", PiwikProvider);
     }
 ]);
