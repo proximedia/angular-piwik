@@ -20,11 +20,11 @@ Enough words, let's...
 
 * for production, add this snippet to your HTML file:
 ```html
-<script src="https://cdn.rawgit.com/proximedia/angular-piwik/v0.3.0/build/angular-piwik.min.js" type="application/javascript"></script>
+<script src="https://cdn.rawgit.com/proximedia/angular-piwik/v0.4.0/build/angular-piwik.min.js" type="application/javascript"></script>
 ```
 * for development, prefer this one:
 ```html
-<script src="https://cdn.rawgit.com/proximedia/angular-piwik/v0.3.0/build/angular-piwik.js" type="application/javascript"></script>
+<script src="https://cdn.rawgit.com/proximedia/angular-piwik/v0.4.0/build/angular-piwik.js" type="application/javascript"></script>
 ```
 
 ##### On the edge
@@ -144,12 +144,11 @@ app.controller("MyCtrl", ["$piwik", "$scope", function ($piwik, $scope)
 });
 ```
 
-
 ```html
 <!DOCTYPE html>
-<html data-ng-app="myApp">
+<html ng-app="myApp">
   <head>...</head>
-  <body data-ng-controller="MyCtrl">
+  <body ng-controller="MyCtrl">
     ...
     <button ng-click="track('trackEvent', ['Test', 'Clicked']);">Track this!</button>
     ...
