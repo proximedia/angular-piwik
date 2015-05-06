@@ -5,6 +5,7 @@ angular.module("pxmPiwik")
         {
             var
                 piwikFormat = "json",
+                piwikId = 1,
                 piwikLanguage = "en",
                 piwikToken = "anonymous",
                 piwikUrlApi = "http://demo.piwik.org/",
@@ -14,6 +15,11 @@ angular.module("pxmPiwik")
             this.setFormat = function (value)
             {
                 piwikFormat = value;
+            };
+
+            this.setId = function (value)
+            {
+                piwikId = value;
             };
 
             this.setLanguage = function (value)
@@ -48,10 +54,27 @@ angular.module("pxmPiwik")
                 piwikUrlWidget = value;
             };
             
-            this.$get = ["$http", function PiwikFactory($http)
+            this.$get = ["$document", "$http", "$window", function ($document, $http, $window)
             {
-                var piwik = {}, util = {};
+                var piwik = {}, paq = {}, util = {};
 
+                piwik.addTracker = function (site, url)
+                {
+                    var g = $document[0].createElement("script"),
+                        s = $document[0].getElementsByTagName("script")[0];
+
+                    g.async = true;
+                    g.defer = true;
+                    g.src = (url || piwikUrlTracker) + "piwik.js";
+                    g.type = "application/javascript";
+
+                    s.parentNode.insertBefore(g,s);
+
+                    piwik.track("trackPageView");
+                    piwik.track("enableLinkTracking");
+                    piwik.track("setTrackerUrl", [(url || piwikUrlTracker) + "piwik.php"]);
+                    piwik.track("setSiteId", [(site || piwikId)]);
+                };
                 piwik.call = function ()
                 {
                     var args;
@@ -83,6 +106,32 @@ angular.module("pxmPiwik")
                     }, params.urls);
 
                     return util.apiCall(params);
+                };
+                piwik.track = function (method, params)
+                {
+                    params = params || [];
+
+                    if (!angular.isString(method) || !angular.isArray(params)) {
+                        return;
+                    }
+
+                    var index = -1;
+                    params.unshift(method);
+                    $window._paq = $window._paq || [];
+
+                    angular.forEach($window._paq, function (value, key)
+                    {
+                        if (value[0] === params[0]) {
+                            this = key;
+                            return;
+                        }
+                    }, index);
+
+                    if (index === -1) {
+                        $window._paq.push(params);
+                    } else {
+                        $window._paq[index] = params;
+                    }
                 };
                 piwik.widget = function (method, params)
                 {
@@ -150,7 +199,7 @@ angular.module("pxmPiwik")
                         return angular.isDate(v) ? v.toISOString() : angular.toJson(v);
                     }
                     return v;
-                }
+                };
 
                 return piwik;
             }];

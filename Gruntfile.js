@@ -6,7 +6,7 @@ module.exports = function (grunt)
                 banner: "'use strict';\n"
             },
             dist: {
-                src: ["src/core.js", "src/providers.js"],
+                src: ["src/core.js", "src/directives.js", "src/providers.js"],
                 dest: "build/angular-piwik.js"
             }
         },
