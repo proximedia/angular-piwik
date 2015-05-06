@@ -122,10 +122,10 @@ angular.module("pxmPiwik")
                     angular.forEach($window._paq, function (value, key)
                     {
                         if (value[0] === params[0]) {
-                            this = key;
+                            index = key;
                             return;
                         }
-                    }, index);
+                    });
 
                     if (index === -1) {
                         $window._paq.push(params);
@@ -139,6 +139,7 @@ angular.module("pxmPiwik")
                         action: "iframe",
                         actionToWidgetize: method.split(".")[1],
                         disableLink: 1,
+                        idSite: piwikId,
                         language: piwikLanguage,
                         module: "Widgetize",
                         moduleToWidgetize: method.split(".")[0],
@@ -150,6 +151,7 @@ angular.module("pxmPiwik")
                 {
                     return $http.get(util.buildUrl(piwikUrlApi, angular.extend({
                         format: piwikFormat,
+                        idSite: piwikId,
                         language: piwikLanguage,
                         module: "API"
                     }, params)));
