@@ -20,11 +20,11 @@ Enough words, let's...
 
 * for production, add this snippet to your HTML file:
 ```html
-<script src="https://cdn.rawgit.com/proximedia/angular-piwik/v0.4.1/build/angular-piwik.min.js" type="application/javascript"></script>
+<script src="https://cdn.rawgit.com/proximedia/angular-piwik/v0.4.2/build/angular-piwik.min.js" type="application/javascript"></script>
 ```
 * for development, prefer this one:
 ```html
-<script src="https://cdn.rawgit.com/proximedia/angular-piwik/v0.4.1/build/angular-piwik.js" type="application/javascript"></script>
+<script src="https://cdn.rawgit.com/proximedia/angular-piwik/v0.4.2/build/angular-piwik.js" type="application/javascript"></script>
 ```
 
 ##### On the edge
